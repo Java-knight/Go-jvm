@@ -28,6 +28,13 @@ Java在写一个Hello World程序时，需要涉及到类加载，HotSpot VM是�
 **实现类路径：**
 类路径就是一个大的整体，它由启动类路径、扩展类路径和用户类路径三个小路径组成。三个小路径又分别由更小的路径构成。这就是组合模式（composite pattern）
 
+这里是有4中Entry实体
+* 第一种就是WildcardEntry: 用来解决用户需要找的class文件路径是一个模糊参数，/usr/load/java/src/*
+* 第二种就是CompositeEntry: 用一个Entry切片 将是以".jar\.JAR"结尾的文件存放起来
+* 第三种就是ZipEntry: 专门用来解析以".jar\.JAR\.zip\.ZIP"结尾的Entry
+* 第四种就是DirEntry: 专门用来解析以路径+className.class的文件读取
+
+可以说，前两种都是为了search class, 后两种都为了parse class.
 
 ### 测试
 ```
