@@ -22,6 +22,7 @@ type Cmd struct {
 	cpOption    string
 	class       string
 	args        []string
+	XjreOption  string // 指定类的位置
 }
 
 // 解析cmd
@@ -36,6 +37,7 @@ func parseCmd() *Cmd {
 	flag.BoolVar(&cmd.versionFlag, "version", false, "print version and exit")
 	flag.StringVar(&cmd.cpOption, "classpath", "", "classpath")
 	flag.StringVar(&cmd.cpOption, "cp", "", "classpath")
+	flag.StringVar(&cmd.XjreOption, "Xjre", "", "path to jre")
 	flag.Parse() // 校验
 
 	args := flag.Args()
@@ -49,20 +51,4 @@ func parseCmd() *Cmd {
 // 打印cmd的输入值, 提示用户输入格式
 func printUsage() {
 	fmt.Printf("Usage: %s [-options] class [args...]\n", os.Args[0])
-}
-
-// 启动JVM
-func startJVM(cmd *Cmd) {
-	fmt.Printf("classpath:%s class:%s args:%v\n", cmd.cpOption, cmd.class, cmd.args)
-}
-
-func main() {
-	cmd := parseCmd()
-	if cmd.versionFlag {
-		fmt.Println("version 0.0.1")
-	} else if cmd.helpFlag || cmd.class == "" {
-		printUsage()
-	} else {
-		startJVM(cmd)
-	}
 }
