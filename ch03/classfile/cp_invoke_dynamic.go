@@ -1,9 +1,8 @@
 package classfile
 
-/*
-CONSTANT_MethodType_info、CONSTANT_MethodHandle_info、CONSTANT_InvokeDynamic_info
-它们都是Java7才添加到class文件中的, 目的是支持新增的invokedynamic 指令
-*/
+// CONSTANT_MethodType_info: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.9
+// CONSTANT_MethodHandle_info: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.8
+// CONSTANT_InvokeDynamic_info: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.10
 
 // 方法处理 常量信息
 type ConstantMethodHandleInfo struct {

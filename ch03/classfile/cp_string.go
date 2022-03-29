@@ -1,5 +1,7 @@
 package classfile
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.3
+
 // 字符串 常量信息
 type ConstantStringInfo struct {
 	cp          ConstantPool

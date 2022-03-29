@@ -1,5 +1,7 @@
 package classfile
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2
+
 // 常量池的引用信息（字段引用、普通方法引用、接口方法引用三个的结构体相同）
 type ConstantMemberrefInfo struct {
 	cp               ConstantPool

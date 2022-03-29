@@ -5,6 +5,8 @@ import (
 	"unicode/utf16"
 )
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7
+
 // Utf8常量信息
 type ConstantUtf8Info struct {
 	str string

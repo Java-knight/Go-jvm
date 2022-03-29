@@ -1,5 +1,8 @@
 package classfile
 
+// Deprecated: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.15
+// Synthetic: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.8
+
 // 已弃用（Deprecated）属性，Java5.0开始提供了@Deprecated注解, 表示该 属性/方法 弃用
 type DeprecatedAttribute struct {
 	MarkerAttribute

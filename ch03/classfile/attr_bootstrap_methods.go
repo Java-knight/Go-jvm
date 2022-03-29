@@ -1,7 +1,8 @@
 package classfile
 
 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23
-// 启动方法属性
+
+// 启动方法属性: invokedynamic指令的引导方法说明
 type BootstrapMethodsAttribute struct {
 	bootstrapMethods []*BootstrapMethod
 }

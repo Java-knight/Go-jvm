@@ -1,5 +1,7 @@
 package classfile
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4
+
 // tag 常量值定义
 const (
 	CONSTANT_Utf8               = 1

@@ -1,5 +1,7 @@
 package classfile
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.10
+
 // SourceFile属性: 可选定长属性, 用于指处源文件名
 type SourceFileAttribute struct {
 	cp              ConstantPool

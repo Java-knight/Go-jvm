@@ -1,5 +1,7 @@
 package classfile
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12
+
 // LineNumberTable属性: 存放方法的行号信息
 type LineNumberTableAttribute struct {
 	lineNumberTable []*LineNumberTableEntry

@@ -2,6 +2,9 @@ package classfile
 
 import "math"
 
+// Integer和float类型: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.4
+// Long和Double类型: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5
+
 // Integer常量信息（byte\short\boolean\char类型都是存放在这个里面）
 type ConstantIntegerInfo struct {
 	val int32

@@ -1,5 +1,7 @@
 package classfile
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3
+
 // Code属性: 变长属性, 存放字节码等方法相关信息
 type CodeAttribute struct {
 	cp             ConstantPool

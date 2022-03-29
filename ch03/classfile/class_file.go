@@ -2,19 +2,21 @@ package classfile
 
 import "fmt"
 
+// https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1
+
 // Class文件格式（常量池、方法信息、接口信息、属性信息）
 type ClassFile struct {
-	//magic uint32
-	minorVersion uint16       // JDK版本与之对应
-	majorVersion uint16       // 魔术
+	magic        uint32       // 魔术
+	minorVersion uint16       // JDK次版本号
+	majorVersion uint16       // JDK主版本号
 	constantPool ConstantPool // 常量池
-	accessFlags  uint16
+	accessFlags  uint16       // 类访问限定标识符
 	thisClass    uint16
 	superClass   uint16
 	interfaces   []uint16
-	fields       []*MemberInfo   // 局部变量
+	fields       []*MemberInfo   // 成员变量
 	methods      []*MemberInfo   // 成员方法
-	attributes   []AttributeInfo // 成员变量
+	attributes   []AttributeInfo // 属性信息（局部变量表、异常信息、符号信息...）
 }
 
 // 解析字节码（将[]byte 转换成 ClassFile结构体）
@@ -49,10 +51,10 @@ func (this *ClassFile) read(reader *ClassReader) {
 	this.attributes = readAttributes(reader, this.constantPool)
 }
 
-// 读取和校验 magic(魔术)（magic和JDK版本相关, jdk1.6对应magic_version 50）
+// 读取和校验 magic(魔术), 校验是否是class文件
 func (this *ClassFile) readAndCheckMagic(reader *ClassReader) {
-	magic := reader.readUint32()
-	if magic != 0xCAFEBABE {
+	this.magic = reader.readUint32()
+	if this.magic != 0xCAFEBABE {
 		panic("java.lang.ClassFormatError: magic!")
 	}
 
