@@ -29,6 +29,26 @@ func (this *CodeAttribute) readInfo(reader *ClassReader) {
 	this.attributes = readAttributes(reader, this.cp)
 }
 
+// 获取操作数栈最大深度
+func (this *CodeAttribute) MaxStack() uint {
+	return uint(this.maxStack)
+}
+
+//  获取局部变量表大小
+func (this *CodeAttribute) MaxLocals() uint {
+	return uint(this.maxLocals)
+}
+
+// 获取字节码
+func (this *CodeAttribute) Code() []byte {
+	return this.code
+}
+
+// 获取异常表
+func (this *CodeAttribute) ExceptionTable() []*ExceptionTableEntry {
+	return this.exceptionTable
+}
+
 // 获取异常表
 func readExceptionTable(reader *ClassReader) []*ExceptionTableEntry {
 	exceptionTableLength := reader.readUint16()

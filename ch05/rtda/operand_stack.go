@@ -84,3 +84,15 @@ func (this *OperandStack) PopRef() *Object {
 	this.slots[this.size].ref = nil
 	return ref
 }
+
+// 入栈一个slot，切片实现的栈（操作数栈）【栈指令】
+func (this *OperandStack) PushSlot(slot Slot) {
+	this.slots[this.size] = slot
+	this.size++
+}
+
+// 出栈一个slot
+func (this *OperandStack) PopSlot() Slot {
+	this.size--
+	return this.slots[this.size]
+}

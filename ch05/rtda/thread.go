@@ -38,3 +38,8 @@ func (this *Thread) PopFrame() *Frame {
 func (this *Thread) CurrentFrame() *Frame {
 	return this.stack.peek()
 }
+
+// 创建一个栈帧(暴露给外部调用的)
+func (this *Thread) NewFrame(maxLocals, maxStack uint) *Frame {
+	return newFrame(this, maxLocals, maxStack)
+}

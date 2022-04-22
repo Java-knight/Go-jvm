@@ -603,6 +603,25 @@ go build
 ### 总结
 Go语言实现其实屏蔽了很多运行时数据区，其实屏蔽了很多的困难，堆这个比较繁琐的内存管理就不需要实现。
 
+
+
+```java
+/**
+ * 高斯考试:
+ * 计算1+2+...+100 = ?
+ * result: 5050
+ */
+public class GaussTest {
+    public static void main(String[] args) {
+        int sum = 0;
+        for (int i = 1; i <= 100; i++) {
+            sum += i;
+        }
+        System.out.println(sum);
+    }
+}
+```
+
 ## go语言总结
 defer+recover()机制:
 相当于Java中的try-catch机制, 程序下面执行出现异常, 本来需要panic直接终止,
@@ -611,4 +630,7 @@ defer+recover()机制:
 go语言返回值:
 go语言规定了返回值(cf *ClassFile, err error), 可以return不写。
 但是没有规定返回值名称(*ClassFile, error), return必须写（return cf, nil）
+
+
+
 

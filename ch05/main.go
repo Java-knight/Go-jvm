@@ -1,51 +1,46 @@
 package main
 
 import (
-	"Go-jvm/ch04/rtda"
+	"Go-jvm/ch05/classfile"
+	"Go-jvm/ch05/classpath"
 	"fmt"
+	"strings"
 )
 
 // 启动JVM
 func startJVM(cmd *Cmd) {
-	frame := rtda.NewFrame(100, 100)
-	testLocalVars(frame.LocalVars())
-	testOperandStack(frame.OperandStack())
+	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
+	className := strings.Replace(cmd.class, ".", "/", -1)
+	classFile := loadClass(className, cp)
+	mainMethod := getMainMethod(classFile)
+	if mainMethod != nil {
+		interpret(mainMethod)
+	} else {
+		fmt.Printf("Main method not found in class %s\n", cmd.class)
+	}
 }
 
-// 测试 局部变量表
-func testLocalVars(vars rtda.LocalVars) {
-	vars.SetInt(0, 100)
-	vars.SetInt(1, -100)
-	vars.SetLong(2, 2997924580)
-	vars.SetLong(4, -2997924580)
-	vars.SetFloat(6, 3.1415926)
-	vars.SetDouble(7, 2.71828182845)
-	vars.SetRef(9, nil)
-	println(vars.GetInt(0))
-	println(vars.GetInt(1))
-	println(vars.GetLong(2))
-	println(vars.GetLong(4))
-	println(vars.GetFloat(6))
-	println(vars.GetDouble(7))
-	println(vars.GetRef(9))
+// 加载class文件(将内存中的[]byte转换成classFile)
+func loadClass(className string, cp *classpath.Classpath) *classfile.ClassFile {
+	classData, _, err := cp.ReadClass(className)
+	if err != nil {
+		panic(err)
+	}
+	classFile, err := classfile.Parse(classData)
+	if err != nil {
+		panic(err)
+	}
+	return classFile
 }
 
-// 测试 操作数栈
-func testOperandStack(ops *rtda.OperandStack) {
-	ops.PushInt(100)
-	ops.PushInt(-100)
-	ops.PushLong(2997924580)
-	ops.PushLong(-2997924580)
-	ops.PushFloat(3.1415926)
-	ops.PushDouble(2.71828182845)
-	ops.PushRef(nil)
-	println(ops.PopRef())
-	println(ops.PopDouble())
-	println(ops.PopFloat())
-	println(ops.PopLong())
-	println(ops.PopLong())
-	println(ops.PopInt())
-	println(ops.PopInt())
+// 获取main方法
+func getMainMethod(classFile *classfile.ClassFile) *classfile.MemberInfo {
+	for _, method := range classFile.Methods() {
+		if method.Name() == "main" && method.Descriptor() == "([Ljava/lang/String;)V" {
+			return method
+		}
+	}
+	return nil
 }
 
 func main() {

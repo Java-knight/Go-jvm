@@ -47,3 +47,14 @@ func (this *MemberInfo) Name() string {
 func (this *MemberInfo) Descriptor() string {
 	return this.cp.getUtf8(this.descriptorIndex)
 }
+
+// 获取 字节码属性
+func (this *MemberInfo) CodeAttribute() *CodeAttribute {
+	for _, attrInfo := range this.attributes {
+		switch attrInfo.(type) {
+		case *CodeAttribute:
+			return attrInfo.(*CodeAttribute)
+		}
+	}
+	return nil
+}
