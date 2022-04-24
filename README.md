@@ -600,10 +600,43 @@ go build
 ```
 
 ## 指令集和解释器
+### 字节码和指令集
+字节码中存放编码后的Java虚拟机指令。每条指令都以一个单字节的操作码（opcode）开头，这就是字节码名称的由来。
+由于只是用一字节表示操作码，那么Java虚拟机做多只能支持256(2^8)条指令。 到jdk1.8为止，
+Java虚拟机规范已经定义了205条指令，操作码分别是0（0x00）到202（0xCA）、254（0xFE）和255（0xFF）。
+这205条指令构成了Java虚拟机的指令集（instruction set）。和汇编语言类似，为了便于记忆，Java虚拟机规范给每个操作码都制定了一个助记符（mnemonic）。
+比如操作码是0x00这条指令，因为它什么也不做，所以它的助记符就是nop（no operation）。
+
+Java虚拟机使用的是变长指令，操作码后面可以根零字节或多字节的操作数（operand）。
+如果把指令想象成函数的话，操作数就是它的参数。为了让编码后的字节码更加紧凑，很多操作码本身就隐含了操作数，
+比如常数0推如操作数栈的指令iconst_0。
+
+在第4节中规定过，操作数栈和局部变量表只存放数据的值，并不记录数据类型（当然也是可以做的，可以给方法加一个check字段，把数据类型枚举）。
+结果就是：指令必须知道自己栈操作什么类型的数据。这一点也直接反映栈了操作码的助记符上。
+比如iadd指令就是对int值进行加法操作；dstore指令把操作数栈顶的double值弹出，存储到局部变量表中；
+areturn指令从方法中返回引用值。也就是说，如果某类指令可以操作不同类型的变量，则助记符的第一个字母表示变量类型。
+助记符首字母和变量对应关系如下表
+
+| 助记符首字母 |   数据类型   |          case          |
+| :----------: | :----------: | :--------------------: |
+|      a       |  reference   | aload、astore、areturn |
+|      b       | byte/boolean |     bipush、baload     |
+|      s       |    short     |    sipush、sastore     |
+|      i       |     int      |   iload、store、iadd   |
+|      l       |     long     |  lload、lstore、ladd   |
+|      f       |    float     |  fload、fstore、fadd   |
+|      d       |    double    |  dload、dstore、dadd   |
+|      c       |     char     |    caload、castore     |
+
+Java虚拟机规范把已经定义的205条指令按用途分成了11类，分别是：常量（constants）指令、加载（loads）指令、
+存储（stores）指令、操作数栈（stack）指令、数学（math）指令、转换（conversions）指令、比较（comparisons）指令、
+控制（control）指令、引用（references）指令、扩展（extended）指令和保留（reserved）指令
+
+保留指令一共3条。其中一条是留给调试器的，用于实现断点，操作码是202（0xCA），助记符是breakpoint。
+另外两条留给Java虚拟机实现内部使用，操作码分别是254（0xFE）和266（0xFF），助记符是impdep1和impdep2。
+这三条指令不允许出现在class文件中。
 ### 总结
 Go语言实现其实屏蔽了很多运行时数据区，其实屏蔽了很多的困难，堆这个比较繁琐的内存管理就不需要实现。
-
-
 
 ```java
 /**
@@ -622,6 +655,35 @@ public class GaussTest {
 }
 ```
 
+
+```shell
+# 编译程序
+go build
+# 执行程序   
+/Users/user/GolandProjects/Go-jvm/ch05/ch05 GaussTest
+# 生成的结果
+PC:  0 instruction: *constants.ICONST_0 &{{}}
+PC:  1 instruction: *stores.ISTORE_1 &{{}}
+PC:  2 instruction: *constants.ICONST_1 &{{}}
+PC:  3 instruction: *stores.ISTORE_2 &{{}}
+PC:  4 instruction: *loads.ILOAD_2 &{{}}
+PC:  5 instruction: *constants.BIPUSH &{100}
+PC:  7 instruction: *comparisons.If_ICMPGT &{{13}}
+PC: 10 instruction: *loads.ILOAD_1 &{{}}
+PC: 11 instruction: *loads.ILOAD_2 &{{}}
+PC: 12 instruction: *math.IADD &{{}}
+PC: 13 instruction: *stores.ISTORE_1 &{{}}
+PC: 14 instruction: *math.IINC &{2 -13}
+LocalVars: [{0 <nil>} {1 <nil>} {-12 <nil>}]
+OPerandStack: &{0 [{1 <nil>} {1 <nil>}]}
+panic: Unsupported opcode: 0xb2! [recovered]
+        panic: Unsupported opcode: 0xb2!
+
+goroutine 1 [running]:
+main.catchErr(0xc000070400)
+...
+// 后面的报错不用处理, 因为没有实现return指令
+```
 ## go语言总结
 defer+recover()机制:
 相当于Java中的try-catch机制, 程序下面执行出现异常, 本来需要panic直接终止,
