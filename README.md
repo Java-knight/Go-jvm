@@ -684,14 +684,49 @@ main.catchErr(0xc000070400)
 ...
 // 后面的报错不用处理, 因为没有实现return指令
 ```
+
+## 类和对象
+### 1. 方法区（元空间）
+方法区主要存放从 class 文件获取的类信息。类变量也存在方法区中。 当Java虚拟机第一次使用某个类中，它搜索类路径，找到相应的 class 文件，
+然后读取并解析 class文件，把相关信息放进方法区。至于方法区到底在何处，是固定大小还是动态调整，是否参与垃圾回收，以及如何在方法区内存放类数据等，
+Java虚拟机规范并没有规定。在jdk8中，hotspot VM将方法区改名为元空间（metaspace）
+
+![栈_堆_方法区的交互关系](./files/readmeImgs/栈_堆_方法区的交互关系.png)
+
+![使用直接指针访问](./files/readmeImgs/使用直接指针访问.png)
+
+### 2. 运行时常量池
+运行时常量池主要存放两类信息：字面量（literal）和符号引用（symbolic reference）。字面量包括整数、浮点数和字符串常量；符号引用包括类符号引用、
+字段符号引用、方法符号引用和接口方法引用。
+
+![符号引用结构体继承关系](./files/readmeImgs/符号引用结构体继承关系.png)
+
+### 3. 类加载器
+
 ## go语言总结
 defer+recover()机制:
 相当于Java中的try-catch机制, 程序下面执行出现异常, 本来需要panic直接终止,
 但是可以在这个函数的开始加上defer-recover住这个异常, 使得程序不会panic继续向下运行
 
 go语言返回值:
-go语言规定了返回值(cf *ClassFile, err error), 可以return不写。
-但是没有规定返回值名称(*ClassFile, error), return必须写（return cf, nil）
+* go语言规定了返回值(cf *ClassFile, err error), 可以return不写。
+* 但是没有规定返回值名称(*ClassFile, error), return必须写（return cf, nil）
+* go语言的方法返回值，调用时带括号返回的是值，不带括号返回的是地址
+```go
+type name struct {
+	val int
+}
+
+func (this name) Value() int {
+	return this.val
+}
+
+func main() {
+	num := &name{3}
+	fmt.Println(num.Value())  // 值3
+    fmt.Println(num.Value)  // 地址0x109f110
+}
+```
 
 
 
